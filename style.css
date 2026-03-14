@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+
+body {
+    background-color: rgb(244, 238, 233);
+    color: rgb(71, 69, 66);
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 2.5rem 2rem;
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.4rem;
+}
+
+.subtitle {
+    color: rgb(138, 133, 127);
+    font-size: 0.9rem;
+    margin-bottom: 1.8rem;
+}
+
+#countHeading {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgb(138, 133, 127);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+}
+
+button {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 0.5px solid rgb(180, 175, 168);
+    background: rgb(249, 249, 248);
+    color: rgb(71, 69, 66);
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+button#generateBtn {
+    background: #3d3830;
+    color: #e8e4de;
+    border-color: #3d3830;
+}
+button#clearBtn {
+    background: #3d3830;
+    color: #e8e4de;
+    border-color: #3d3830;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+input[type='number'] {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px 14px;
+    width: 180px;
+    border: 0.5px solid rgb(180, 175, 168);
+    border-radius: 8px;
+    background: rgb(249, 249, 248);
+    color: rgb(71, 69, 66);
+    outline: none;
+}
+
+input[type='number']::placeholder {
+    color: rgb(180, 175, 168);
+}
+
+input:focus {
+    outline: 1.5px solid #888;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 0.6rem;
+}
+
+.note {
+    font-size: 12px;
+    color: rgb(160, 155, 149);
+    margin-bottom: 2rem;
+}
+
+#message {
+    min-height: 24px;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgb(180, 80, 60);
+}
+
+hr {
+    border: none;
+    border-top: 0.5px solid rgb(220, 215, 210);
+    margin: 2rem 0;
+}
+
+#palette {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.color-box {
+    border-radius: 14px;
+    width: 140px;
+    height: 190px;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: transform 0.18s;
+    gap: 6px;
+}
+
+.color-box:hover {
+    transform: translateY(-5px);
+}
+
+.color-box span {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 5px 9px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.82);
+    color: #2c2b29;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.lock-btn{
+    padding: 5px 9px;
+    font-size: 10px;
+    background-color: rgba(255, 255, 255, 0.82);
+    color: #2c2b29;
+    border: 0px ;
+    border-radius: 6px;
+    cursor: pointer;
+
+}
+
+.locked {
+    outline: 4px solid rgb(212, 157, 115);
+}
+
+label[for="copyFormat"] {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgb(138, 133, 127);
+}
+
+#copyFormat {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px 14px;
+    border: 0.5px solid rgb(180, 175, 168);
+    border-radius: 8px;
+    background: rgb(249, 249, 248);
+    color: rgb(71, 69, 66);
+    outline: none;
+    cursor: pointer;
+}
+
+#copyFormat:focus {
+    outline: 1.5px solid #888;
+}
