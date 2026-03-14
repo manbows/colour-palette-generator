@@ -4,9 +4,11 @@ A browser-based tool for generating, locking, and copying colour palettes.
 
 ## Preview
 
-![Colour Palette Generator](static/dashboard1.png)
-![Colour Palette Generator](static/dashboard2.png)
-![Colour Palette Generator](static/dashboard3.png)
+## Preview
+
+![Colour Palette Generator](https://raw.githubusercontent.com/manbows/Colour-Palette-Generator/main/static/dashboard1.png)
+![Colour Palette Generator](https://raw.githubusercontent.com/manbows/Colour-Palette-Generator/main/static/dashboard2.png)
+![Colour Palette Generator](https://raw.githubusercontent.com/manbows/Colour-Palette-Generator/main/static/dashboard3.png)
 
 ## Features
 
