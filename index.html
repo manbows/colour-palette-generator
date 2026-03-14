@@ -9,27 +9,42 @@
 </head>
 <body>
     <div class="container">
-    <h1>Colour Palette Generator</h1>
-    <p class="subtitle">Enter how many colours you want, then click the button or press the G key.</p>
+        <h1>Colour Palette Generator</h1>
+        <p class="subtitle">Enter how many colours you want, then click the button or press the G key.</p>
 
-    <h2 id="countHeading">0 colours on the screen</h2>
-    <div class="controls">
-    <input type="number" id="colorCount" placeholder="Enter number of colours" min="1" max="20"></input>
-    <button id="generateBtn">Generate Colour</button>
-    <button id="clearBtn">Clear Message</button>
-    <label for="copyFormat">Copy Format</label>
-    <select id="copyFormat">
-        <option value="hex">HEX</option>
-        <option value="RGB">RGB</option>
-    </select>
-</div>
-<div class="gradient-controls">
-    <button id="gradientBtn">Generate Gradient</button>
-</div>
-<p id="message"></p>
-<p class="note">You can generate between 1 and 20 colours. Click a colour to copy it's HEX code.</p>
-<div id="palette"></div>
-</div>
+        <h2 id="countHeading">0 colours on the screen</h2>
+
+        <div class="controls">
+            <input type="number" id="colorCount" placeholder="Enter number of colours" min="1" max="20">
+            <button id="generateBtn">Generate Colour</button>
+            <button id="clearBtn">Clear Message</button>
+            <label for="copyFormat">Copy Format</label>
+            <select id="copyFormat">
+                <option value="hex">HEX</option>
+                <option value="RGB">RGB</option>
+            </select>
+            <button id="saveBtn">Save Palette</button>
+        </div>
+
+        <div class="gradient-section">
+            <p class="note">Double click two colours to preview a gradient.</p>
+            <button id="gradientBtn">Generate Gradient</button>
+            <div id="gradientPreview"></div>
+            <p id="gradientCode"></p>
+        </div>
+
+        <p id="message"></p>
+        <p class="note">You can generate between 1 and 20 colours. Click a colour to copy its HEX code.</p>
+
+        <div id="palette"></div>
+
+        <hr>
+
+        <div id="savedSection">
+            <h2 id="savedHeading">Saved Palettes</h2>
+            <div id="savedPalettes"></div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

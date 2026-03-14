@@ -5,12 +5,36 @@ const palette = document.getElementById("palette")
 const countHeading = document.getElementById("countHeading")
 const message = document.getElementById("message")
 const copyFormat = document.getElementById("copyFormat")
-let messageTimeout 
+const gradientBtn = document.getElementById("gradientBtn")
+const gradientPreview = document.getElementById("gradientPreview")
+const gradientCode = document.getElementById("gradientCode")
 
-function generateColor(){
+let messageTimeout
+let selectedGradientBoxes = []
+
+function selectForGradient(event) {
+    const box = event.currentTarget
+
+    if (box.classList.contains("gradient-selected")) {
+        box.classList.remove("gradient-selected")
+        selectedGradientBoxes = selectedGradientBoxes.filter(item => item !== box)
+        return
+    }
+    if (selectedGradientBoxes.length < 2) {
+        box.classList.add("gradient-selected")
+        selectedGradientBoxes.push(box)
+    } else {
+        selectedGradientBoxes[0].classList.remove("gradient-selected")
+        selectedGradientBoxes.shift()
+        box.classList.add("gradient-selected")
+        selectedGradientBoxes.push(box)
+    }
+}
+
+function generateColor() {
     const letters = "0123456789ABCDEF"
     let color = "#"
-    for (let i=0; i<6; i++){
+    for (let i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)]
     }
     return color
@@ -20,7 +44,7 @@ function updateColorCount(number) {
     countHeading.innerText = number + " colours on screen"
 }
 
-function copyColor(event){
+function copyColor(event) {
     const hex = event.currentTarget.querySelector("span").innerText
     const format = document.getElementById("copyFormat").value
     const colorText = format === 'RGB' ? hexToRgb(hex) : hex
@@ -33,7 +57,6 @@ function copyColor(event){
             showMessage("Copy failed: " + err)
         })
 }
-
 
 function createBoxes(number) {
     palette.innerHTML = ""
@@ -59,6 +82,7 @@ function createBoxes(number) {
         palette.appendChild(box)
 
         box.addEventListener("click", copyColor)
+        box.addEventListener("dblclick", selectForGradient)
     }
     updateColorCount(number)
 }
@@ -87,13 +111,148 @@ function hexToRgb(hex) {
     return `rgb(${r}, ${g}, ${b})`
 }
 
-function generatePalette(){
+function generateGradient() {
+    if (selectedGradientBoxes.length < 2) {
+        showMessage("Double click two colours to generate a gradient")
+        return
+    }
+    const color1 = selectedGradientBoxes[0].querySelector("span").innerText
+    const color2 = selectedGradientBoxes[1].querySelector("span").innerText
+    const gradient = `linear-gradient(to right, ${color1}, ${color2})`
+    gradientPreview.style.background = gradient
+    gradientPreview.style.display = "block"
+    gradientCode.innerText = gradient
+    gradientCode.style.display = "block"
+}
+
+function savePalette() {
+    const boxes = document.querySelectorAll(".color-box")
+    if (boxes.length === 0) {
+        showMessage("Generate a palette first")
+        return
+    }
+
+    const colors = Array.from(boxes).map(box => box.querySelector("span").innerText)
+    const saved = JSON.parse(localStorage.getItem("savedPalettes") || "[]")
+    saved.push({ colors, id: Date.now() })
+    localStorage.setItem("savedPalettes", JSON.stringify(saved))
+    renderSavedPalettes()
+    showMessage("Palette saved!")
+}
+
+function deletePalette(id) {
+    const saved = JSON.parse(localStorage.getItem("savedPalettes") || "[]")
+    const updated = saved.filter(p => p.id !== id)
+    localStorage.setItem("savedPalettes", JSON.stringify(updated))
+    renderSavedPalettes()
+}
+
+function expandPalette(savedPalette) {
+    const existing = document.querySelector(".palette-modal")
+    if (existing) existing.remove()
+
+    const format = document.getElementById("copyFormat").value
+
+    const modal = document.createElement("div")
+    modal.classList.add("palette-modal")
+
+    const modalMessage = document.createElement("p")
+    modalMessage.classList.add("modal-message")
+
+    const inner = document.createElement("div")
+    inner.classList.add("palette-modal-inner")
+
+    savedPalette.colors.forEach(color => {
+        const swatch = document.createElement("div")
+        swatch.classList.add("palette-modal-swatch")
+        swatch.style.backgroundColor = color
+
+        const displayColor = format === 'RGB' ? hexToRgb(color) : color
+
+        const code = document.createElement("span")
+        code.innerText = displayColor
+        code.classList.add("palette-modal-code")
+
+        swatch.addEventListener("click", () => {
+            navigator.clipboard.writeText(displayColor)
+                .then(() => {
+                    modalMessage.innerText = displayColor + " copied!"
+                    setTimeout(() => modalMessage.innerText = "", 2000)
+                })
+                .catch(err => {
+                    modalMessage.innerText = "Copy failed: " + err
+                })
+        })
+
+        swatch.appendChild(code)
+        inner.appendChild(swatch)
+    })
+
+    const closeBtn = document.createElement("button")
+    closeBtn.innerText = "Close"
+    closeBtn.classList.add("palette-modal-close")
+    closeBtn.addEventListener("click", () => modal.remove())
+
+    modal.appendChild(inner)
+    modal.appendChild(modalMessage)
+    modal.appendChild(closeBtn)
+    document.body.appendChild(modal)
+
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.remove()
+    })
+}
+
+function renderSavedPalettes() {
+    const saved = JSON.parse(localStorage.getItem("savedPalettes") || "[]")
+    const container = document.getElementById("savedPalettes")
+    const section = document.getElementById("savedSection")
+
+    if (saved.length === 0) {
+        section.style.display = "none"
+        return
+    }
+
+    section.style.display = "block"
+    container.innerHTML = ""
+
+    saved.forEach(savedPalette => {
+        const card = document.createElement("div")
+        card.classList.add("saved-card")
+
+        const strips = document.createElement("div")
+        strips.classList.add("saved-strips")
+
+        savedPalette.colors.forEach(color => {
+            const strip = document.createElement("div")
+            strip.classList.add("saved-strip")
+            strip.style.backgroundColor = color
+            strip.title = color
+            strips.appendChild(strip)
+        })
+
+        const deleteBtn = document.createElement("button")
+        deleteBtn.innerText = "Delete"
+        deleteBtn.classList.add("delete-btn")
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation()
+            deletePalette(savedPalette.id)
+        })
+
+        card.appendChild(strips)
+        card.appendChild(deleteBtn)
+        card.addEventListener("click", () => expandPalette(savedPalette))
+        container.appendChild(card)
+    })
+}
+
+function generatePalette() {
     let number = parseInt(colorInput.value)
 
-    if (!number || number < 1){
+    if (!number || number < 1) {
         number = 5
     }
-    if (number > 20){
+    if (number > 20) {
         number = 20
         colorInput.value = 20
         showMessage("Maximum limit is 20 colours")
@@ -103,7 +262,7 @@ function generatePalette(){
 
     const boxes = document.querySelectorAll(".color-box")
 
-    if (boxes.length === 0){
+    if (boxes.length === 0) {
         createBoxes(number)
     } else {
         boxes.forEach(box => {
@@ -128,7 +287,6 @@ function generatePalette(){
                 box.dataset.locked = 'false'
 
                 const lockBtn = document.createElement("button")
-
                 lockBtn.innerText = '🔓'
                 lockBtn.classList.add("lock-btn")
 
@@ -139,6 +297,7 @@ function generatePalette(){
                 palette.appendChild(box)
 
                 box.addEventListener("click", copyColor)
+                box.addEventListener("dblclick", selectForGradient)
             }
         }
 
@@ -163,11 +322,11 @@ function showMessage(text) {
     clearTimeout(messageTimeout)
     message.innerText = text
     messageTimeout = setTimeout(() => {
-        message.innerText = "";
-    }, 2000);
+        message.innerText = ""
+    }, 2000)
 }
 
-function handleKeyPress(event){
+function handleKeyPress(event) {
     if (event.key === 'g' || event.key === 'G') {
         generatePalette()
     }
@@ -176,3 +335,7 @@ function handleKeyPress(event){
 generateButton.addEventListener("click", generatePalette)
 clearButton.addEventListener("click", clearMessage)
 document.addEventListener("keydown", handleKeyPress)
+gradientBtn.addEventListener("click", generateGradient)
+document.getElementById("saveBtn").addEventListener("click", savePalette)
+
+renderSavedPalettes()
